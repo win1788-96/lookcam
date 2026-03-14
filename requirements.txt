@@ -1,0 +1,10 @@
+numpy
+opencv-python
+mss
+pygetwindow
+pypiwin32
+Pillow
+onvif-zeep
+zeep
+pyautogui
+pywin32
