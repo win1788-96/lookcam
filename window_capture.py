@@ -132,6 +132,12 @@ def capture_lookcam_window():
                 print("LookCam 視窗已關閉。")
                 break
             
+            # --- 新增：檢查視窗是否最小化 ---
+            if win32gui.IsIconic(hwnd):
+                # 視窗最小化時，擷取不到有效內容，暫停監控
+                time.sleep(1.0)
+                continue
+
             # 讀取設定
             sensitivity = cv2.getTrackbarPos("Sensitivity", main_win)
             # 重新設計靈敏度公式：數值愈小面積門檻愈大 (靈敏度 1 時要求約 1/4 畫面變動才觸發)
@@ -155,10 +161,18 @@ def capture_lookcam_window():
 
             # CPU 優化與預處理
             scale = 300 / w
-            small_frame = cv2.resize(frame, (300, int(h * scale)))
+            new_w, new_h = 300, int(h * scale)
+            small_frame = cv2.resize(frame, (new_w, new_h))
             gray = cv2.cvtColor(small_frame, cv2.COLOR_BGR2GRAY)
             # 增加模糊強度 (從 21 增加到 31) 以過濾細微閃爍
             gray = cv2.GaussianBlur(gray, (31, 31), 0)
+
+            # --- 修正：處理視窗縮放導致的尺寸不匹配 ---
+            if avg_frame is not None:
+                # 檢查目前影格尺寸是否與平均背景一致
+                if gray.shape != avg_frame.shape:
+                    print(f"偵測到視窗尺寸變更 ({avg_frame.shape} -> {gray.shape})，重置監控背景...")
+                    avg_frame = None
 
             # 背景平均法
             if avg_frame is None:
