@@ -1,0 +1,39 @@
+# LookCam Motion Capture Tools
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+ENV/
+
+# Binaries
+*.dll
+*.exe
+
+# Secrets & Configs
+LINE-Developers.me
+*.json
+
+# Captures
+captures/
+motion_captures/
+
+# Folders
+audio/
+bearer/
+iconengines/
+imageformats/
+mediaservice/
+platforms/
+playlistformats/
+translations/
+GoogleDrive/
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
